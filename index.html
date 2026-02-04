@@ -313,6 +313,40 @@
     backdrop-filter:none !important;
   }
 }
+/* =========================
+   FIX: mobile profile overflow
+   ========================= */
+.profileWrap{
+  max-width: 100%;
+}
+
+.profileWrap img{
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.profileText{
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+/* mocniejsze dopasowanie na telefonie */
+@media (max-width: 700px){
+  .profileWrap{
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profileWrap img{
+    width: 100%;
+    max-width: 420px; /* możesz zmienić np. 360/480 */
+  }
+
+  .profileText{
+    text-align: center;
+  }
+}
 
     }
   </style>
