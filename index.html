@@ -281,6 +281,39 @@
       .container{padding:28px 16px}
       .box{padding:18px}
       .sideDecor{display:none;}
+      /* =========================
+   MOBILE PERFORMANCE MODE
+   ========================= */
+@media (max-width: 768px){
+  *{
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .bgSlide{
+    filter:none !important;
+    transform:none !important;
+  }
+
+  .smokeOverlay{
+    display:none !important;
+  }
+
+  .bgDim{
+    background:rgba(0,0,0,.85) !important;
+  }
+
+  .player img,
+  .logoTop img{
+    box-shadow:none !important;
+    filter:none !important;
+  }
+
+  .box{
+    backdrop-filter:none !important;
+  }
+}
+
     }
   </style>
 </head>
