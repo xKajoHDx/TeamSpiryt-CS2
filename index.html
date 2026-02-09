@@ -92,7 +92,7 @@
     }
 
     /* =========================
-       BOCZNE OZDOBY (teraz: tylko przyciemnienie, bez kresek)
+       BOCZNE OZDOBY (tylko przyciemnienie)
        ========================= */
     .sideDecor{
       position:fixed;
@@ -104,19 +104,14 @@
     }
     .sideDecor.left{left:0}
     .sideDecor.right{right:0}
-
-    /* Zamieniamy "dekor" na miękki gradientowy cień */
     .sideDecor::before{
       content:"";
       position:absolute; inset:0;
       background: linear-gradient(to right, rgba(0,0,0,.55), transparent 80%);
-      filter: none;
     }
     .sideDecor.right::before{
       background: linear-gradient(to left, rgba(0,0,0,.55), transparent 80%);
     }
-
-    /* USUNIĘTE: kreseczki (nie ma ::after) */
 
     /* =========================
        LAYOUT
@@ -214,7 +209,6 @@
       text-shadow:0 0 12px rgba(0,255,100,.55);
       letter-spacing:1px;
     }
-    /* tylko role na kartach (bez opisów) */
     .roleLine{
       margin-top:6px;
       font-weight:800;
@@ -231,15 +225,22 @@
       flex-wrap:wrap;
       gap:26px;
       align-items:flex-start;
+      max-width:100%;
     }
     .profileWrap img{
       width:min(360px, 92vw);
+      max-width:100%;
+      height:auto;
+      display:block;
       border-radius:14px;
       box-shadow:0 0 40px rgba(0,255,100,.80);
       border:1px solid rgba(124,255,107,.28);
       background:rgba(0,0,0,.35);
     }
-    .profileText{max-width:720px}
+    .profileText{
+      max-width:720px;
+      overflow-wrap:anywhere;
+    }
     .profileText .role{
       color:#baffb2;
       margin-top:10px;
@@ -277,77 +278,57 @@
     @media (max-width:900px){
       .sideDecor{width:120px;opacity:.85}
     }
+
+    /* =========================
+       MOBILE PERFORMANCE MODE
+       ========================= */
+    @media (max-width: 768px){
+      *{
+        animation: none !important;
+        transition: none !important;
+      }
+
+      .bgSlide{
+        filter:none !important;
+        transform:none !important;
+      }
+
+      .smokeOverlay{
+        display:none !important;
+      }
+
+      .bgDim{
+        background:rgba(0,0,0,.85) !important;
+      }
+
+      .player img,
+      .logoTop img{
+        box-shadow:none !important;
+        filter:none !important;
+      }
+
+      .box{
+        backdrop-filter:none !important;
+      }
+    }
+
     @media (max-width:700px){
       .container{padding:28px 16px}
       .box{padding:18px}
       .sideDecor{display:none;}
-      /* =========================
-   MOBILE PERFORMANCE MODE
-   ========================= */
-@media (max-width: 768px){
-  *{
-    animation: none !important;
-    transition: none !important;
-  }
 
-  .bgSlide{
-    filter:none !important;
-    transform:none !important;
-  }
-
-  .smokeOverlay{
-    display:none !important;
-  }
-
-  .bgDim{
-    background:rgba(0,0,0,.85) !important;
-  }
-
-  .player img,
-  .logoTop img{
-    box-shadow:none !important;
-    filter:none !important;
-  }
-
-  .box{
-    backdrop-filter:none !important;
-  }
-}
-/* =========================
-   FIX: mobile profile overflow
-   ========================= */
-.profileWrap{
-  max-width: 100%;
-}
-
-.profileWrap img{
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-.profileText{
-  max-width: 100%;
-  overflow-wrap: anywhere;
-}
-
-/* mocniejsze dopasowanie na telefonie */
-@media (max-width: 700px){
-  .profileWrap{
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .profileWrap img{
-    width: 100%;
-    max-width: 420px; /* możesz zmienić np. 360/480 */
-  }
-
-  .profileText{
-    text-align: center;
-  }
-}
-
+      .profileWrap{
+        flex-direction:column;
+        align-items:center;
+      }
+      .profileWrap img{
+        width:100%;
+        max-width:420px;
+      }
+      .profileText{
+        text-align:center;
+        max-width:100%;
+      }
     }
   </style>
 </head>
@@ -515,6 +496,28 @@
       </ul>
     </div>
 
+    <!-- POTENCJALNE TRANSFERY (NA SAMYM DOLE) -->
+    <div class="section">
+      <div class="centerTitle">
+        <h2>Potencjalne transfery</h2>
+      </div>
+
+      <div class="players">
+        <div class="player" onclick="openProfile('oskarek')">
+          <!-- ZMIENIŁEM NA NAZWY BEZ SPACJI (zalecane) -->
+          <img src="oskarek.jpg" alt="OskarekBombalek">
+          <div class="nick">OskarekBombalek</div>
+          <div class="roleLine">Potencjalny transfer</div>
+        </div>
+
+        <div class="player" onclick="openProfile('skinet')">
+          <img src="skinet.png" alt="Skinet">
+          <div class="nick">Skinet</div>
+          <div class="roleLine">Potencjalny transfer</div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- ===================== PROFIL ZAWODNIKA ===================== -->
@@ -564,12 +567,10 @@
     let switching = false;
 
     (async function initSlider(){
-      // upewnij się, że pierwszy obraz jest gotowy
       await preload(bgImages[0]);
       setBg(bgA, bgImages[0]);
       bgA.classList.add("active");
 
-      // przygotuj drugi
       const second = bgImages[1 % bgImages.length];
       await preload(second);
       setBg(bgB, second);
@@ -585,24 +586,21 @@
       const outgoing = showingA ? bgA : bgB;
       const incoming = showingA ? bgB : bgA;
 
-      // kolejny indeks w pętli
       bgIndex = (bgIndex + 1) % bgImages.length;
       const nextSrc = bgImages[bgIndex];
 
-      // poczekaj aż obraz się wczyta (tu znika "pusta przerwa")
       const ok = await preload(nextSrc);
       if (!ok) { switching = false; return; }
 
       setBg(incoming, nextSrc);
 
-      // fade-in incoming, outgoing znika dopiero po czasie przejścia
       requestAnimationFrame(() => {
         incoming.classList.add("active");
         setTimeout(() => {
           outgoing.classList.remove("active");
           showingA = !showingA;
           switching = false;
-        }, 1900); // trochę więcej niż 1.8s transition
+        }, 1900);
       });
     }
 
@@ -617,35 +615,35 @@
         role: "IGL (In-Game Leader)",
         img: "payex.png",
         desc:
-` Doświadczony filar drużyny. Spokój, pewność decyzji i stabilność wtedy, gdy reszta zaczyna się palić. Lider zespołu odpowiedzialny za strategię, prowadzenie rund oraz podejmowanie kluczowych decyzji w trakcie meczu.`
+`Doświadczony filar drużyny. Spokój, pewność decyzji i stabilność wtedy, gdy reszta zaczyna się palić. Lider zespołu odpowiedzialny za strategię, prowadzenie rund oraz podejmowanie kluczowych decyzji w trakcie meczu.`
       },
       fiszu: {
         name: "Fiszu",
         role: "AWPer",
         img: "fiszu.jpg",
         desc:
-` Młody wilk głodny fragów. Szybko się uczy, ale czasem bardziej kocha statystyki niż wygraną rundę — agresja to jego drugie imię. Snajper drużyny. Odpowiada za kontrolę mapy, otwieranie rund i utrzymywanie przewagi taktycznej.`
+`Młody wilk głodny fragów. Szybko się uczy, ale czasem bardziej kocha statystyki niż wygraną rundę — agresja to jego drugie imię. Snajper drużyny. Odpowiada za kontrolę mapy, otwieranie rund i utrzymywanie przewagi taktycznej.`
       },
       tandes: {
         name: "Tandes",
         role: "Entry Fragger",
         img: "tandes.png",
         desc:
-` Gdy trafi na Edka, runda zamienia się w pole bitwy… słownej. Chaos, krzyki i brak planu, ale bywa, że z tego szaleństwa rodzą się clutch’e. Pierwszy zawodnik wchodzący na bombsite. Agresywna gra, szybkie reakcje i tworzenie przestrzeni dla zespołu.`
+`Gdy trafi na Edka, runda zamienia się w pole bitwy… słownej. Chaos, krzyki i brak planu, ale bywa, że z tego szaleństwa rodzą się clutch’e. Pierwszy zawodnik wchodzący na bombsite. Agresywna gra, szybkie reakcje i tworzenie przestrzeni dla zespołu.`
       },
       kajo: {
         name: "Kajo",
         role: "Support",
         img: "kajo.png",
         desc:
-` Profesor granatów. Smoke, flash i HE zawsze na czas — jeśli runda wygrywa się utility, to jego robota. Wsparcie drużyny poprzez granaty, zabezpieczanie kluczowych pozycji oraz grę zespołową.`
+`Profesor granatów. Smoke, flash i HE zawsze na czas — jeśli runda wygrywa się utility, to jego robota. Wsparcie drużyny poprzez granaty, zabezpieczanie kluczowych pozycji oraz grę zespołową.`
       },
       wieczi: {
         name: "Wieczi",
         role: "Lurker",
         img: "wieczi.png",
         desc:
-` Niesamowity game sense połączony z solidnym aimem. Często wie, gdzie jest przeciwnik, zanim ten sam się zorientuje. Zawodnik grający taktycznie, kontrolujący flanki i zaskakujący przeciwnika w kluczowych momentach.`
+`Niesamowity game sense połączony z solidnym aimem. Często wie, gdzie jest przeciwnik, zanim ten sam się zorientuje. Zawodnik grający taktycznie, kontrolujący flanki i zaskakujący przeciwnika w kluczowych momentach.`
       },
 
       synnek: {
@@ -653,35 +651,53 @@
         role: "Rezerwowy (IGL)",
         img: "synnek.png",
         desc:
-` Stary wyjadacz z dawnych topowych czasów. Ogromne doświadczenie i chłodna głowa, gdy drużyna tego potrzebuje.`
+`Stary wyjadacz z dawnych topowych czasów. Ogromne doświadczenie i chłodna głowa, gdy drużyna tego potrzebuje.`
       },
       tomi: {
         name: "Tomi",
         role: "Rezerwowy (AWPer)",
         img: "tomi.png",
         desc:
-` Totalny chaos i nieprzewidywalność. Gra jak szalony, ale zawsze głodny — przerwy na jedzenie potrafią doprowadzić team do szału.`
+`Totalny chaos i nieprzewidywalność. Gra jak szalony, ale zawsze głodny — przerwy na jedzenie potrafią doprowadzić team do szału.`
       },
       kuczmi: {
         name: "Kuczmi",
         role: "Rezerwowy (Lurker)",
         img: "kuczmi.png",
         desc:
-` Według siebie były Global. Specjalista od Mirage’a — na innych mapach czuje się jak turysta bez mapy.`
+`Według siebie były Global. Specjalista od Mirage’a — na innych mapach czuje się jak turysta bez mapy.`
       },
       edek: {
         name: "Edek",
         role: "Rezerwowy (Support)",
         img: "edek.png",
         desc:
-` Wkurzający grubasek i generator hałasu. Krzyczy, miesza i wprowadza chaos, który potrafi rozbić każdą rundę. Jego najsłynniejszym momentem był mecz na mapie Inferno. Ten niepowtarzalny występ niewątpliwie przeszedł do historii. To wtedy Edek popisał się niesamowitym wynikiem i tym samym stał się żywą legendą Team Spiryt. Wynikiem jaki wykręcił było zawrotne 0-16.`
+`Wkurzający grubasek i generator hałasu. Krzyczy, miesza i wprowadza chaos, który potrafi rozbić każdą rundę.`
       },
       skrz: {
         name: "Skrz",
         role: "Rezerwowy (Entry Fragger)",
         img: "skrz.png",
         desc:
-` Technologia go nie kocha: ping skacze, Faceit nie działa jak trzeba. Ale gdy już odpali, potrafi zrobić akcję meczu.`
+`Technologia go nie kocha: ping skacze, Faceit nie działa jak trzeba. Ale gdy już odpali, potrafi zrobić akcję meczu.`
+      },
+
+      /* =========================
+         POTENCJALNE TRANSFERY
+         ========================= */
+      oskarek: {
+        name: "OskarekBombalek",
+        role: "Potencjalny transfer",
+        img: "oskarek.jpg",
+        desc:
+`Weteran z czasów świetności CS:GO, były Global. Aim nadal kosmiczny, pytanie tylko, czy w CS2 też odpali pełną moc — potencjał zdecydowanie jest.`
+      },
+      skinet: {
+        name: "Skinet",
+        role: "Potencjalny transfer",
+        img: "skinet.png",
+        desc:
+`Wujek drużyny i mózg operacyjny, który wraca z esportowej emerytury. Świetne calle, nieszablonowe pomysły i szybkie dostosowywanie się do tempa rundy — pytanie tylko, czy ten powrót okaże się strzałem w dziesiątkę, czy jednak emerytura była zasłużona.`
       }
     };
 
@@ -695,6 +711,8 @@
       document.getElementById("profile").style.display = "block";
 
       document.getElementById("pimg").src = p.img;
+      document.getElementById("pimg").alt = p.name;
+
       document.getElementById("pnick").innerText = p.name;
       document.getElementById("prole").innerText = p.role;
       document.getElementById("pdesc").innerText = p.desc;
@@ -710,4 +728,3 @@
   </script>
 </body>
 </html>
-
