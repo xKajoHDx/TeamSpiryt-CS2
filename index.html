@@ -386,9 +386,10 @@
           <div class="roleLine">AWPer</div>
         </div>
 
-        <div class="player" onclick="openProfile('tandes')">
-          <img src="tandes.png" alt="Tandes">
-          <div class="nick">Tandes</div>
+        <!-- NOWY ZAWODNIK: Kvndzio (zamiast Tandes) -->
+        <div class="player" onclick="openProfile('kvndzio')">
+          <img src="kvndzio.jpg" alt="Kvndzio">
+          <div class="nick">Kvndzio</div>
           <div class="roleLine">Entry Fragger</div>
         </div>
 
@@ -449,10 +450,11 @@
           <div class="roleLine">Rezerwowy (Lurker)</div>
         </div>
 
-        <div class="player" onclick="openProfile('edek')">
-          <img src="edek.png" alt="Edek">
-          <div class="nick">Edek</div>
-          <div class="roleLine">Rezerwowy (Support)</div>
+        <!-- Tandes przesunięty na ławkę rezerwową (za Edka) -->
+        <div class="player" onclick="openProfile('tandes')">
+          <img src="tandes.png" alt="Tandes">
+          <div class="nick">Tandes</div>
+          <div class="roleLine">Rezerwowy (Entry Fragger)</div>
         </div>
 
         <div class="player" onclick="openProfile('skrz')">
@@ -496,7 +498,7 @@
       </ul>
     </div>
 
-    <!-- POTENCJALNE TRANSFERY (NA SAMYM DOLE) -->
+    <!-- POTENCJALNE TRANSFERY -->
     <div class="section">
       <div class="centerTitle">
         <h2>Potencjalne transfery</h2>
@@ -504,8 +506,7 @@
 
       <div class="players">
         <div class="player" onclick="openProfile('oskarek')">
-          <!-- ZMIENIŁEM NA NAZWY BEZ SPACJI (zalecane) -->
-          <img src="bombalek.png" alt="OskarekBombalek">
+          <img src="oskarek.jpg" alt="OskarekBombalek">
           <div class="nick">OskarekBombalek</div>
           <div class="roleLine">Potencjalny transfer</div>
         </div>
@@ -514,6 +515,21 @@
           <img src="skinet.png" alt="Skinet">
           <div class="nick">Skinet</div>
           <div class="roleLine">Potencjalny transfer</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRAWDOPODOBNE ODEJŚCIA (NA SAMYM DOLE) -->
+    <div class="section">
+      <div class="centerTitle">
+        <h2>Prawdopodobne odejścia</h2>
+      </div>
+
+      <div class="players">
+        <div class="player" onclick="openProfile('edek')">
+          <img src="edek.png" alt="Edek">
+          <div class="nick">Edek</div>
+          <div class="roleLine">Prawdopodobne odejście</div>
         </div>
       </div>
     </div>
@@ -561,7 +577,6 @@
       });
     }
 
-    // start
     let bgIndex = 0;
     let showingA = true;
     let switching = false;
@@ -624,12 +639,12 @@
         desc:
 `Młody wilk głodny fragów. Szybko się uczy, ale czasem bardziej kocha statystyki niż wygraną rundę — agresja to jego drugie imię. Snajper drużyny. Odpowiada za kontrolę mapy, otwieranie rund i utrzymywanie przewagi taktycznej.`
       },
-      tandes: {
-        name: "Tandes",
+      kvndzio: {
+        name: "Kvndzio",
         role: "Entry Fragger",
-        img: "tandes.png",
+        img: "kvndzio.png",
         desc:
-`Gdy trafi na Edka, runda zamienia się w pole bitwy… słownej. Chaos, krzyki i brak planu, ale bywa, że z tego szaleństwa rodzą się clutch’e. Pierwszy zawodnik wchodzący na bombsite. Agresywna gra, szybkie reakcje i tworzenie przestrzeni dla zespołu.`
+`Maszyna do entry fragów i specjalista od AK-47. Najlepiej czuje się z kałachem w ręku, ale AWP też nie jest mu straszne — w praktyce żadna broń nie jest mu obca. Jego królestwo to Mirage, a under to jego teren — mówi się, że prowadzi tam własny „bazarek z dywanami”. Jeśli trzeba otworzyć bombsite, Kvndzio już biegnie pierwszy.`
       },
       kajo: {
         name: "Kajo",
@@ -667,12 +682,12 @@
         desc:
 `Według siebie były Global. Specjalista od Mirage’a — na innych mapach czuje się jak turysta bez mapy.`
       },
-      edek: {
-        name: "Edek",
-        role: "Rezerwowy (Support)",
-        img: "edek.png",
+      tandes: {
+        name: "Tandes",
+        role: "Rezerwowy (Entry Fragger)",
+        img: "tandes.png",
         desc:
-`Wkurzający grubasek i generator hałasu. Krzyczy, miesza i wprowadza chaos, który potrafi rozbić każdą rundę.`
+`Gdy trafi na Edka, runda zamienia się w pole bitwy… słownej. Chaos, krzyki i brak planu, ale bywa, że z tego szaleństwa rodzą się clutch’e. Pierwszy zawodnik wchodzący na bombsite. Agresywna gra, szybkie reakcje i tworzenie przestrzeni dla zespołu.`
       },
       skrz: {
         name: "Skrz",
@@ -682,13 +697,10 @@
 `Technologia go nie kocha: ping skacze, Faceit nie działa jak trzeba. Ale gdy już odpali, potrafi zrobić akcję meczu.`
       },
 
-      /* =========================
-         POTENCJALNE TRANSFERY
-         ========================= */
       oskarek: {
         name: "OskarekBombalek",
         role: "Potencjalny transfer",
-        img: "bombalek.png",
+        img: "oskarek.jpg",
         desc:
 `Weteran z czasów świetności CS:GO, były Global. Aim nadal kosmiczny, pytanie tylko, czy w CS2 też odpali pełną moc — potencjał zdecydowanie jest.`
       },
@@ -698,6 +710,14 @@
         img: "skinet.png",
         desc:
 `Wujek drużyny i mózg operacyjny, który wraca z esportowej emerytury. Świetne calle, nieszablonowe pomysły i szybkie dostosowywanie się do tempa rundy — pytanie tylko, czy ten powrót okaże się strzałem w dziesiątkę, czy jednak emerytura była zasłużona.`
+      },
+
+      edek: {
+        name: "Edek",
+        role: "Prawdopodobne odejście (Support)",
+        img: "edek.png",
+        desc:
+`Wkurzający grubasek i generator hałasu. Krzyczy, miesza i wprowadza chaos, który potrafi rozbić każdą rundę.`
       }
     };
 
